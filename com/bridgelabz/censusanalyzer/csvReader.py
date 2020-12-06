@@ -15,7 +15,7 @@ class CSVReader:
 
     def sort_csv_data(self, sorting_key):
         """
-        sorts csv data
+        sorts csv data  by State code
         :return:sorted data in json format
         """
         value_Dict = {}
