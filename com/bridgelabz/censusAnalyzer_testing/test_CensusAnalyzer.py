@@ -2,9 +2,9 @@ from com.bridgelabz.censusanalyzer.CensusAnalyzerError import CensusAnalyserErro
 from com.bridgelabz.censusanalyzer.StatecodeAnalyzer import Statecodeanalyzer
 from com.bridgelabz.censusanalyzer.censusanalyzer import CSVLoader
 from com.bridgelabz.censusanalyzer.IndiaCensusCSV import IndiaCensusCSV
-import pytest
-
 from com.bridgelabz.censusanalyzer.csvReader import CSVReader
+import pytest
+import json
 
 CENSUS_CSV_FILE_PATH = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv"
 CENSUS_CSV_FILE_WRONG_PATH = "IndiaStateCensusData.csv"
@@ -14,6 +14,13 @@ CENSUS_CSV_FILE_WRONG_TYPE = r"home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/c
 CENSUS_CSV_FILE_WRONG_DELIMITER = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/USCensusDataDelimiter.csv"
 CENSUS_CSV_WRONG_HEADER_FILE_PATH = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData1.csv"
 CENSUS_CSV_FILE_PATH_STATE = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCode.csv"
+
+
+@pytest.fixture
+def census_csv_file():
+    csv_file = CSVLoader(CENSUS_CSV_FILE_PATH, IndiaCensusCSV())
+    csv = CSVReader(csv_file)
+    return csv
 
 
 @pytest.mark.parametrize("header, path, result",
@@ -37,9 +44,17 @@ def test_Happy_Test_Case_where_the_records_are_checked_TC_1_and_2(header, path, 
     (Statecodeanalyzer(), CENSUS_CSV_FILE_WRONG_TYPE, CensusAnalyserError),
     (Statecodeanalyzer(), CENSUS_CSV_FILE_WRONG_DELIMITER, CensusAnalyserError),
     (Statecodeanalyzer(), CENSUS_CSV_WRONG_HEADER_FILE_PATH, CensusAnalyserError)
-                                                ])
+])
 # This is a Sad Test Cases to verify if exception gets raised or not
 def test_Given_the_CSV_File_if_incorrect_Returns_a_custom_Exception_TC_1_and_2(header, path, result):
     with pytest.raises(result):
         csv = CSVLoader(path, header)
         csv.csv_loader()
+
+
+def test_Given_the_CSV_File_When_Sorted_If_incorrect_Should_Raise_Custom_Exception(census_csv_file):
+    data = json.loads(census_csv_file.sort_csv_data("State"))
+    if list(data.keys())[0] != "Andhra Pradesh":
+        raise CensusAnalyserError("File is not sorted!!!")
+    if list(data.keys())[len(data) - 1] != "West Bengal":
+        raise CensusAnalyserError("File is not sorted!!!")
