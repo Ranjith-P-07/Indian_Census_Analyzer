@@ -23,6 +23,13 @@ def census_csv_file():
     return csv
 
 
+@pytest.fixture
+def state_csv_file():
+    csv_file = CSVLoader(CENSUS_CSV_FILE_PATH_STATE, Statecodeanalyzer())
+    state_csv_file = CSVReader(csv_file)
+    return state_csv_file
+
+
 @pytest.mark.parametrize("header, path, result",
                          [
                              (IndiaCensusCSV(), CENSUS_CSV_FILE_PATH, 29),
@@ -58,3 +65,11 @@ def test_Given_the_CSV_File_When_Sorted_If_incorrect_Should_Raise_Custom_Excepti
         raise CensusAnalyserError("File is not sorted!!!")
     if list(data.keys())[len(data) - 1] != "West Bengal":
         raise CensusAnalyserError("File is not sorted!!!")
+
+
+def test_Given_CSV_File_When_Sorted_If_incorrect_Should_Raise_Custom_Exception(state_csv_file):
+    data = json.loads(state_csv_file.sort_csv_data("StateCode"))
+    if list(data.get(list(data.keys())[0]))[3] != "AD":
+        raise CensusAnalyserError("File is not sorted")
+    if list(data.get(list(data.keys())[len(data) - 1]))[3] != "WB":
+        raise CensusAnalyserError("File is not sorted")
