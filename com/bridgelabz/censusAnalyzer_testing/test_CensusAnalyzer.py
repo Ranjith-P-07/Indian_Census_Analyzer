@@ -4,6 +4,8 @@ from com.bridgelabz.censusanalyzer.censusanalyzer import CSVLoader
 from com.bridgelabz.censusanalyzer.IndiaCensusCSV import IndiaCensusCSV
 import pytest
 
+from com.bridgelabz.censusanalyzer.csvReader import CSVReader
+
 CENSUS_CSV_FILE_PATH = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv"
 CENSUS_CSV_FILE_WRONG_PATH = "IndiaStateCensusData.csv"
 CENSUS_CSV_FILE_WRONG_TYPE = r"home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.xls"
@@ -14,71 +16,30 @@ CENSUS_CSV_WRONG_HEADER_FILE_PATH = r"/home/ubuntu/PycharmProjects/IndiaCensusAn
 CENSUS_CSV_FILE_PATH_STATE = r"/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCode.csv"
 
 
+@pytest.mark.parametrize("header, path, result",
+                         [
+                             (IndiaCensusCSV(), CENSUS_CSV_FILE_PATH, 29),
+                             (Statecodeanalyzer(), CENSUS_CSV_FILE_PATH_STATE, 37)
+                         ])
 # This is a Happy test Case Where records are checked
-def test_Happy_Test_Case_where_the_records_are_checked_TC_1_1():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_PATH, IndiaCensusCSV())
-    assert csv_loader.record_counter() == 29
+def test_Happy_Test_Case_where_the_records_are_checked_TC_1_and_2(header, path, result):
+    csv = CSVLoader(path, header)
+    csv_file = CSVReader(csv)
+    assert csv_file.csv_reader() == result
 
 
-# This is a Sad Test Case to verify if exception gets raised or not
-def test_Given_the_Indian_Census_CSV_File_if_incorrect_Returns_a_custom_Exception_TC_1_2():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_PATH, IndiaCensusCSV())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the type is incorrect then exception gets raised
-def test_Given_the_Indian_Census_CSV_File_when_correct_but_type_incorrect_Returns_a_custom_Exception_TC_1_3():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_TYPE, IndiaCensusCSV())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the file delimiter is incorrect then exception gets raised
-# NOTE - Change delimiter of the file and save it
-def test_Given_the_Indian_Census_CSV_File_when_correct_but_wrong_delimiter_incorrect_Returns_a_custom_Exception_TC_1_4():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_DELIMITER, IndiaCensusCSV())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the Header is incorrect then exception gets raised
-def test_Given_the_Indian_Census_CSV_File_when_correct_but_wrong_Header_Returns_a_custom_Exception_TC_1_5():
-    csv_loader = CSVLoader(CENSUS_CSV_WRONG_HEADER_FILE_PATH, IndiaCensusCSV())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Happy test Case Where records are checked
-def test_Happy_Test_Case_where_the_records_are_checked_TC_2_1():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_PATH_STATE, Statecodeanalyzer())
-    assert csv_loader.record_counter() == 37
-
-
-# This is a Sad Test Case to verify if exception gets raised or not
-def test_Given_the_State_Census_CSV_File_if_incorrect_Returns_a_custom_Exception_TC_2_2():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_PATH, Statecodeanalyzer())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the type is incorrect then exception gets raised
-def test_Given_the_State_Census_CSV_File_when_correct_but_type_incorrect_Returns_a_custom_Exception_TC_2_3():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_TYPE, Statecodeanalyzer())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the file delimiter is incorrect then exception gets raised
-# NOTE - Change delimiter of the file and save it
-def test_Given_the_State_Census_CSV_File_when_correct_but_wrong_delimiter_incorrect_Returns_a_custom_Exception_TC_2_4():
-    csv_loader = CSVLoader(CENSUS_CSV_FILE_WRONG_DELIMITER, Statecodeanalyzer())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
-
-
-# This is a Sad Test Case to verify if the Header is incorrect then exception gets raised
-def test_Given_the_State_Census_CSV_File_when_correct_but_wrong_Header_Returns_a_custom_Exception_TC_2_5():
-    csv_loader = CSVLoader(CENSUS_CSV_WRONG_HEADER_FILE_PATH, Statecodeanalyzer())
-    with pytest.raises(CensusAnalyserError):
-        csv_loader.record_counter()
+@pytest.mark.parametrize("header, path, result", [
+    (IndiaCensusCSV(), CENSUS_CSV_FILE_WRONG_PATH, CensusAnalyserError),
+    (IndiaCensusCSV(), CENSUS_CSV_FILE_WRONG_TYPE, CensusAnalyserError),
+    (IndiaCensusCSV(), CENSUS_CSV_FILE_WRONG_DELIMITER, CensusAnalyserError),
+    (IndiaCensusCSV(), CENSUS_CSV_WRONG_HEADER_FILE_PATH, CensusAnalyserError),
+    (Statecodeanalyzer(), CENSUS_CSV_FILE_WRONG_PATH, CensusAnalyserError),
+    (Statecodeanalyzer(), CENSUS_CSV_FILE_WRONG_TYPE, CensusAnalyserError),
+    (Statecodeanalyzer(), CENSUS_CSV_FILE_WRONG_DELIMITER, CensusAnalyserError),
+    (Statecodeanalyzer(), CENSUS_CSV_WRONG_HEADER_FILE_PATH, CensusAnalyserError)
+                                                ])
+# This is a Sad Test Cases to verify if exception gets raised or not
+def test_Given_the_CSV_File_if_incorrect_Returns_a_custom_Exception_TC_1_and_2(header, path, result):
+    with pytest.raises(result):
+        csv = CSVLoader(path, header)
+        csv.csv_loader()
