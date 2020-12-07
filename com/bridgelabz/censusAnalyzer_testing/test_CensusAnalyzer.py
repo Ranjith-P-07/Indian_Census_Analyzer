@@ -75,9 +75,17 @@ def test_Given_CSV_File_When_Sorted_If_incorrect_Should_Raise_Custom_Exception(s
         raise CensusAnalyserError("File is not sorted")
 
 
-def test_given_StateCodeCSV_When_SortedAccordingToPopulation_IfNot_ShouldRaiseCustomException(census_csv_file):
+def test_given_IndianCensusCSV_When_SortedAccordingToPopulation_IfNot_ShouldRaiseCustomException(census_csv_file):
     data = json.loads(census_csv_file.sort_csv_data("Population"))
     if list(data.keys())[0] != "Uttar Pradesh":
         raise CensusAnalyserError("File is not sorted")
     if list(data.keys())[len(data) - 1] != "Sikkim":
+        raise CensusAnalyserError("File is not sorted")
+
+
+def test_given_IndianCensusCSV_When_SortedAccordingToDensityPerSqKm_IfNot_ShouldRaiseCustomException(census_csv_file):
+    data = json.loads(census_csv_file.sort_csv_data("DensityPerSqKm"))
+    if list(data.keys())[0] != "Bihar":
+        raise CensusAnalyserError("File is not sorted")
+    if list(data.keys())[len(data) - 1] != "Arunachal Pradesh":
         raise CensusAnalyserError("File is not sorted")
