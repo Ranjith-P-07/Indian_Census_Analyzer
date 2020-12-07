@@ -1,5 +1,8 @@
 import json
 
+from com.bridgelabz.censusanalyzer.IndiaCensusCSV import IndiaCensusCSV
+from com.bridgelabz.censusanalyzer.censusanalyzer import CSVLoader
+
 
 class CSVReader:
     def __init__(self, obj):
@@ -19,8 +22,19 @@ class CSVReader:
         :return:sorted data in json format
         """
         value_Dict = {}
-        data = self.obj.csv_loader().sort_values(colm_name)
+        cod = True
+        if colm_name == "Population":
+            cod = False
+        data = self.obj.csv_loader().sort_values(colm_name, ascending=cod)
         for x in data.values:
             data_list = list(x)
             value_Dict[data_list[0]] = data_list
         return json.dumps(value_Dict)
+
+
+# if __name__ == "__main__":
+#     census_csv = CSVLoader(
+#         "/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv",
+#         IndiaCensusCSV())
+#     csv = CSVReader(census_csv)
+#     print(csv.sort_csv_data("Population"))
