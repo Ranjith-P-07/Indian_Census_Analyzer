@@ -36,7 +36,7 @@ def state_csv_file():
                              (Statecodeanalyzer(), CENSUS_CSV_FILE_PATH_STATE, 37)
                          ])
 # This is a Happy test Case Where records are checked
-def test_Happy_Test_Case_where_the_records_are_checked_TC_1_and_2(header, path, result):
+def test_Given_Test_Case_where_the_records_are_checked_UC_1_and_2(header, path, result):
     csv = CSVLoader(path, header)
     csv_file = CSVReader(csv)
     assert csv_file.csv_reader() == result
@@ -72,4 +72,12 @@ def test_Given_CSV_File_When_Sorted_If_incorrect_Should_Raise_Custom_Exception(s
     if list(data.get(list(data.keys())[0]))[3] != "AD":
         raise CensusAnalyserError("File is not sorted")
     if list(data.get(list(data.keys())[len(data) - 1]))[3] != "WB":
+        raise CensusAnalyserError("File is not sorted")
+
+
+def test_given_StateCodeCSV_When_SortedAccordingToPopulation_IfNot_ShouldRaiseCustomException(census_csv_file):
+    data = json.loads(census_csv_file.sort_csv_data("Population"))
+    if list(data.keys())[0] != "Uttar Pradesh":
+        raise CensusAnalyserError("File is not sorted")
+    if list(data.keys())[len(data) - 1] != "Sikkim":
         raise CensusAnalyserError("File is not sorted")
