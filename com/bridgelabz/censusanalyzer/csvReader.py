@@ -23,7 +23,7 @@ class CSVReader:
         """
         value_Dict = {}
         cod = True
-        if colm_name == "Population":
+        if colm_name == "Population" or colm_name == "DensityPerSqKm":
             cod = False
         data = self.obj.csv_loader().sort_values(colm_name, ascending=cod)
         for x in data.values:
@@ -32,9 +32,9 @@ class CSVReader:
         return json.dumps(value_Dict)
 
 
-# if __name__ == "__main__":
-#     census_csv = CSVLoader(
-#         "/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv",
-#         IndiaCensusCSV())
-#     csv = CSVReader(census_csv)
-#     print(csv.sort_csv_data("Population"))
+if __name__ == "__main__":
+    census_csv = CSVLoader(
+        "/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv",
+        IndiaCensusCSV())
+    csv = CSVReader(census_csv)
+    print(csv.sort_csv_data("DensityPerSqKm"))
