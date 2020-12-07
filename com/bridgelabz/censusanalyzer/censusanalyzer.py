@@ -1,5 +1,6 @@
 import pandas as pd
 from com.bridgelabz.censusanalyzer.CensusAnalyzerError import CensusAnalyserError
+from com.bridgelabz.censusanalyzer.IndiaCensusCSV import IndiaCensusCSV
 
 
 class CSVLoader:
@@ -10,8 +11,8 @@ class CSVLoader:
 
     def csv_loader(self):
         """
-        Count record in file
-        :return: number of records in file
+        Loads csv file
+        :return: Data of CSV  file
         """
         try:
             col_names = repr(self.header).split(",")
@@ -22,3 +23,8 @@ class CSVLoader:
         except ValueError:
             raise CensusAnalyserError("Wrong Delimiter or Invalid Columns Name")
 
+
+# if __name__ == "__main__":
+#     csv = CSVLoader("/home/ubuntu/PycharmProjects/IndiaCensusAnalyzer/com/bridgelabz/Data/IndiaStateCensusData.csv",
+#                     IndiaCensusCSV())
+#     print(csv.csv_loader())
