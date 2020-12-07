@@ -13,13 +13,13 @@ class CSVReader:
         """
         return len(self.obj.csv_loader())
 
-    def sort_csv_data(self, sorting_key):
+    def sort_csv_data(self, colm_name):
         """
         sorts csv data  by State code
         :return:sorted data in json format
         """
         value_Dict = {}
-        data = self.obj.csv_loader().sort_values(sorting_key)
+        data = self.obj.csv_loader().sort_values(colm_name)
         for x in data.values:
             data_list = list(x)
             value_Dict[data_list[0]] = data_list
