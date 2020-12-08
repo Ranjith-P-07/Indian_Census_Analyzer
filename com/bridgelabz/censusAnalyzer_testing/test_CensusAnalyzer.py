@@ -89,3 +89,11 @@ def test_given_IndianCensusCSV_When_SortedAccordingToDensityPerSqKm_IfNot_Should
         raise CensusAnalyserError("File is not sorted")
     if list(data.keys())[len(data) - 1] != "Arunachal Pradesh":
         raise CensusAnalyserError("File is not sorted")
+
+
+def test_given_IndianCensusCSV_When_SortedAccordingToAreaInSqKm_IfNot_ShouldRaiseCustomException(census_csv_file):
+    data = json.loads(census_csv_file.sort_csv_data("AreaInSqKm"))
+    if list(data.keys())[0] != "Rajasthan":
+        raise CensusAnalyserError("File is not sorted")
+    if list(data.keys())[len(data) - 1] != "Goa":
+        raise CensusAnalyserError("File is not sorted")
